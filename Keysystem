@@ -1,101 +1,205 @@
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Create UI
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
+local FrameStroke = Instance.new("UIStroke")
 local TextBox = Instance.new("TextBox")
+local TextBoxStroke = Instance.new("UIStroke")
 local UICorner = Instance.new("UICorner")
 local TextButton = Instance.new("TextButton")
+local TextButtonStroke1 = Instance.new("UIStroke")
 local UICorner_2 = Instance.new("UICorner")
 local TextButton_2 = Instance.new("TextButton")
+local TextButtonStroke2 = Instance.new("UIStroke")
 local UICorner_3 = Instance.new("UICorner")
 local TextButton_3 = Instance.new("TextButton")
+local TextButtonStroke3 = Instance.new("UIStroke")
 local UICorner_4 = Instance.new("UICorner")
 local UICorner_5 = Instance.new("UICorner")
 local TextLabel = Instance.new("TextLabel")
+local TextLabelStroke = Instance.new("UIStroke")
 
---Properties:
-
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Name = "KeySystemUI"
 
+-- Centered UI
 Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.fromRGB(27, 27, 27)
-Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-Frame.BorderSizePixel = 0
-Frame.Position = UDim2.new(0.271496803, 0, 0.347989947, 0)
+Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
 Frame.Size = UDim2.new(0, 574, 0, 242)
+Frame.BackgroundColor3 = Color3.fromRGB(27, 27, 27)
+Frame.BorderSizePixel = 0
+Frame.Name = "MainFrame"
 
+FrameStroke.Parent = Frame
+FrameStroke.Thickness = 3
+FrameStroke.Color = Color3.fromRGB(0, 0, 0)
+
+UICorner_5.Parent = Frame
+
+-- Movable UI
+local dragging, dragInput, dragStart, startPos
+
+Frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = Frame.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+Frame.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		dragInput = input
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+end)
+
+-- TextBox
 TextBox.Parent = Frame
 TextBox.BackgroundColor3 = Color3.fromRGB(47, 47, 47)
-TextBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextBox.BorderSizePixel = 0
-TextBox.Position = UDim2.new(0.289198607, 0, 0.328859061, 0)
+TextBox.Position = UDim2.new(0.289, 0, 0.33, 0)
 TextBox.Size = UDim2.new(0, 242, 0, 50)
 TextBox.Font = Enum.Font.FredokaOne
 TextBox.Text = ""
 TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextBox.TextScaled = true
-TextBox.TextSize = 14.000
 TextBox.TextWrapped = true
+
+TextBoxStroke.Parent = TextBox
+TextBoxStroke.Color = Color3.fromRGB(0, 0, 0)
+TextBoxStroke.Thickness = 2
 
 UICorner.Parent = TextBox
 
+-- Redeem Key Button
 TextButton.Parent = Frame
 TextButton.BackgroundColor3 = Color3.fromRGB(47, 47, 47)
-TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextButton.BorderSizePixel = 0
-TextButton.Position = UDim2.new(0.139372826, 0, 0.666537225, 0)
+TextButton.Position = UDim2.new(0.139, 0, 0.667, 0)
 TextButton.Size = UDim2.new(0, 200, 0, 50)
 TextButton.Font = Enum.Font.FredokaOne
 TextButton.Text = "Redeem Key"
 TextButton.TextColor3 = Color3.fromRGB(0, 255, 21)
 TextButton.TextScaled = true
-TextButton.TextSize = 14.000
 TextButton.TextWrapped = true
+
+TextButtonStroke1.Parent = TextButton
+TextButtonStroke1.Color = Color3.fromRGB(0, 0, 0)
+TextButtonStroke1.Thickness = 2
 
 UICorner_2.Parent = TextButton
 
+-- Get Key Button
 TextButton_2.Parent = Frame
 TextButton_2.BackgroundColor3 = Color3.fromRGB(47, 47, 47)
-TextButton_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextButton_2.BorderSizePixel = 0
-TextButton_2.Position = UDim2.new(0.533101022, 0, 0.666537225, 0)
+TextButton_2.Position = UDim2.new(0.533, 0, 0.667, 0)
 TextButton_2.Size = UDim2.new(0, 200, 0, 50)
 TextButton_2.Font = Enum.Font.FredokaOne
 TextButton_2.Text = "Get Key"
 TextButton_2.TextColor3 = Color3.fromRGB(255, 0, 0)
 TextButton_2.TextScaled = true
-TextButton_2.TextSize = 14.000
 TextButton_2.TextWrapped = true
+
+TextButtonStroke2.Parent = TextButton_2
+TextButtonStroke2.Color = Color3.fromRGB(0, 0, 0)
+TextButtonStroke2.Thickness = 2
 
 UICorner_3.Parent = TextButton_2
 
+-- Close Button
 TextButton_3.Parent = Frame
-TextButton_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TextButton_3.BackgroundTransparency = 1.000
-TextButton_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextButton_3.BorderSizePixel = 0
-TextButton_3.Position = UDim2.new(0.945993006, 0, -0.0731322244, 0)
+TextButton_3.BackgroundTransparency = 1.0
+TextButton_3.Position = UDim2.new(0.945, 0, -0.073, 0)
 TextButton_3.Size = UDim2.new(0, 56, 0, 50)
 TextButton_3.Font = Enum.Font.FredokaOne
 TextButton_3.Text = "X"
 TextButton_3.TextColor3 = Color3.fromRGB(255, 0, 0)
 TextButton_3.TextScaled = true
-TextButton_3.TextSize = 14.000
 TextButton_3.TextWrapped = true
+
+TextButtonStroke3.Parent = TextButton_3
+TextButtonStroke3.Color = Color3.fromRGB(0, 0, 0)
+TextButtonStroke3.Thickness = 2
 
 UICorner_4.Parent = TextButton_3
 
-UICorner_5.Parent = Frame
-
+-- Title Label
 TextLabel.Parent = Frame
-TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.BackgroundTransparency = 1.000
-TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel.BorderSizePixel = 0
-TextLabel.Position = UDim2.new(0.325783968, 0, 0.0413223132, 0)
+TextLabel.BackgroundTransparency = 1
+TextLabel.Position = UDim2.new(0.325, 0, 0.041, 0)
 TextLabel.Size = UDim2.new(0, 200, 0, 32)
 TextLabel.Font = Enum.Font.FredokaOne
 TextLabel.Text = "Key System"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextScaled = true
-TextLabel.TextSize = 14.000
 TextLabel.TextWrapped = true
+
+TextLabelStroke.Parent = TextLabel
+TextLabelStroke.Color = Color3.fromRGB(0, 0, 0)
+TextLabelStroke.Thickness = 2
+
+-- Close with Animation
+function slideOutAndDestroy()
+	local tween = TweenService:Create(Frame, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+		Position = UDim2.new(0.5, 0, 1.5, 0)
+	})
+	tween:Play()
+	tween.Completed:Wait()
+	ScreenGui:Destroy()
+end
+
+-- Shake Function
+function shakeUI()
+	for i = 1, 3 do
+		Frame.Position = Frame.Position + UDim2.new(0, 8, 0, 0)
+		task.wait(0.05)
+		Frame.Position = Frame.Position - UDim2.new(0, 16, 0, 0)
+		task.wait(0.05)
+		Frame.Position = Frame.Position + UDim2.new(0, 8, 0, 0)
+		task.wait(0.05)
+	end
+end
+
+-- Redeem Key Button Logic
+TextButton.MouseButton1Click:Connect(function()
+	local key = TextBox.Text
+	if key:lower() == "nox hub" then
+		TextBox.Text = "Key valid!"
+		TextBox.TextColor3 = Color3.fromRGB(0, 255, 0)
+		task.wait(1.5)
+		slideOutAndDestroy()
+	else
+		TextBox.Text = "Key invalid"
+		TextBox.TextColor3 = Color3.fromRGB(255, 0, 0)
+		shakeUI()
+	end
+end)
+
+-- Get Key Button Logic
+TextButton_2.MouseButton1Click:Connect(function()
+	setclipboard("nox hub")
+	TextBox.Text = "Copied!"
+	TextBox.TextColor3 = Color3.fromRGB(255, 255, 0)
+end)
+
+-- Close Button Logic
+TextButton_3.MouseButton1Click:Connect(function()
+	slideOutAndDestroy()
+end)
